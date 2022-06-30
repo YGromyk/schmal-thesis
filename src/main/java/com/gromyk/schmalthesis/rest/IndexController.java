@@ -1,48 +1,39 @@
 package com.gromyk.schmalthesis.rest;
 
 
-import com.gromyk.thesis.persistence.db.Post;
-import com.gromyk.thesis.persistence.db.Sex;
-import com.gromyk.thesis.persistence.db.User;
-import com.gromyk.thesis.persistence.db.repositories.PostRepository;
-import com.gromyk.thesis.persistence.db.repositories.UserRepository;
+import com.gromyk.thesis.persistence.db.repositories.user.UserRepositoryImpl;
+import entities.Sex;
+import entities.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import repositories.UserRepository;
 
 import javax.persistence.Table;
+import java.time.LocalDateTime;
 
 @RestController
 @Table(name = "usersthesis")
 public class IndexController {
     private final UserRepository userRepository;
-    private final PostRepository postRepository;
 
     @Autowired
-    public IndexController(UserRepository userRepository, PostRepository postRepository) {
+    public IndexController(UserRepositoryImpl userRepository) {
         this.userRepository = userRepository;
-        this.postRepository = postRepository;
     }
 
 
     @GetMapping("/")
     String getDefaultMessage() {
-        User user = new User("email@gmail.com", "yurii", "password", Sex.Male);
+        User user = new User(1L, "yurii", "email@gmail.com", LocalDateTime.now(), Sex.Male, 0, 0, "pass");
         user = userRepository.save(user);
-        Post postDB1 = new Post();
-        postDB1.setContent("First post!");
-        postDB1.setAuthor(user);
-        postRepository.save(postDB1);
-        Post postDB2 = new Post();
-        postDB2.setContent("Second post!");
-        postDB2.setAuthor(user);
-        postRepository.save(postDB2);
+
         return "hello from spring controller!";
     }
 
     @GetMapping(value = "/user", produces = MediaType.APPLICATION_JSON_VALUE)
     String getUser() {
-        return userRepository.findAll().iterator().next().getName();
+        return userRepository.findByEmail("email@gmail.com").getEmail();
     }
 }

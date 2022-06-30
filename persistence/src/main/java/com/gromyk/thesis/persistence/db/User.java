@@ -1,9 +1,8 @@
 package com.gromyk.thesis.persistence.db;
 
 
-import java.util.List;
-
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "users")
@@ -22,11 +21,21 @@ public class User {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     private List<Post> posts;
 
-    public User(String email, String name, String password, Sex sex) {
+
+    @OneToMany()
+    @JoinColumn(name = "followers")
+    private List<Following> followings;
+    @OneToMany
+    @JoinColumn(name = "followings")
+    private List<Following> followers;
+
+    public User(String email, String name, String password, Sex sex, List<Following> followings, List<Following> followers) {
         this.email = email;
         this.name = name;
         this.password = password;
         this.sex = sex;
+        this.followings = followings;
+        this.followers = followers;
     }
 
     public User() {
@@ -78,5 +87,21 @@ public class User {
 
     public void setPosts(List<Post> posts) {
         this.posts = posts;
+    }
+
+    public List<Following> getFollowings() {
+        return followings;
+    }
+
+    public void setFollowings(List<Following> followings) {
+        this.followings = followings;
+    }
+
+    public List<Following> getFollowers() {
+        return followers;
+    }
+
+    public void setFollowers(List<Following> followers) {
+        this.followers = followers;
     }
 }

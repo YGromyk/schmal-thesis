@@ -13,7 +13,7 @@ public class Like {
     private Long id;
 
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private User whoLiked;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
